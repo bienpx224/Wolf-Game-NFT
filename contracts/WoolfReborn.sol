@@ -37,7 +37,7 @@ contract WoolfReborn is
   IWoolfMetadata public unoriginalMetadata;
 
   /** 
-   * instantiates contract
+   * initializes contract
    * @param _woolf address of original woolf contract
    * @param _barn address of original barn contract
    */
@@ -112,7 +112,7 @@ contract WoolfReborn is
   }
 
   /**
-   * gets the alpha score for a Wolf
+   * gets the owner / staker of a sheep / wolf
    * @param sheepWolfId the ID of the Wolf to get the alpha score for
    * @return owner - the owner of the token
    * @return inBarn - whether or not it's currently in the barn
