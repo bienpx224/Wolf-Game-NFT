@@ -85,6 +85,7 @@ contract WoolfReborn is
 
   /**
    * burns a token if its not currently in the barn
+   * @param owner the owner of the legacy token
    * @param tokenId id of the token to burn
    */
   function _attemptBurn(address owner, uint256 tokenId) internal {
@@ -110,9 +111,15 @@ contract WoolfReborn is
     return 8 - alphaIndex; // alpha index is 0-3
   }
 
+  /**
+   * gets the alpha score for a Wolf
+   * @param sheepWolfId the ID of the Wolf to get the alpha score for
+   * @return owner - the owner of the token
+   * @return inBarn - whether or not it's currently in the barn
+   */
   function _ownerOf(uint256 sheepWolfId) internal view returns (address owner, bool inBarn) {
     owner = woolf.ownerOf(sheepWolfId);
-    if (owner != address(barn)) return (owner, false); // if its not in the barn return the owner
+    if (owner != address(barn)) return (owner, false);
     if (_isSheep(sheepWolfId)) {
       ( , , owner) = barn.barn(sheepWolfId);
     } else {
@@ -132,10 +139,18 @@ contract WoolfReborn is
     else _unpause();
   }
 
+  /**
+   * sets the proxied values of the metadata for the original tokens
+   * @param _metadata an address that conforms to IWoolfMetadata
+   */
   function setOriginalMetadata(address _metadata) external onlyOwner {
     originalMetadata = IWoolfMetadata(_metadata);
   }
 
+  /**
+   * sets the proxied values of the metadata for any tokens beyond the original ones
+   * @param _metadata an address that conforms to IWoolfMetadata
+   */
   function setUnoriginalMetadata(address _metadata) external onlyOwner {
     unoriginalMetadata = IWoolfMetadata(_metadata);
   }
@@ -158,6 +173,9 @@ contract WoolfReborn is
 
   /** RENDER */
 
+  /**
+   * proxies tokenURI to whichever contract hosts the data
+   */
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
     if (tokenId <= ORIGINAL_SUPPLY) {
